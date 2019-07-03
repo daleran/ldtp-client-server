@@ -25,5 +25,5 @@ StudentRegistrationServer.exe [ip] [port]
 ```
 To send data to the server start the client passing the server IP and port to the program.
 ```
-java -jar StudentRosterClient.jar [ip] [port]
+java -jar StudentRosterClient.jar [ip] [port] [studentID]
 ```

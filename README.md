@@ -18,3 +18,12 @@ The message serialization format has the first line key named "Type" followed by
 ...
 [keyn]\t[valuen]\n
 ```
+## Getting Started
+To get started sending data between the client and server start the server using any CLI passing the localhost IP and port to the program.
+```
+StudentRegistrationServer.exe [ip] [port]
+```
+To send data to the server start the client passing the server IP and port to the program.
+```
+java -jar StudentRosterClient.jar [ip] [port]
+```

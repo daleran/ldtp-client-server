@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "StudentRegistrationServer": {
+      "commandName": "Project",
+      "commandLineArgs": "192.168.0.4 7366"
+    }
+  }
+}

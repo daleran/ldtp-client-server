@@ -2,7 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 /// <summary>
-/// Student registration
+/// Student registration server that listens for input and coverts the messages into RegistrationStudent objects and saves them to a fake database.
 /// </summary>
 namespace StudentRegistrationServer
 {

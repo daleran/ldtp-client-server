@@ -15,16 +15,16 @@ import java.nio.charset.Charset;
  * @author Sean Davis
  */
 public class LDTPClient {
-	final char ACK = (char)06;
-	final char EOT = (char)04;
+	private final char ACK = (char)6;
+	private final char EOT = (char)4;
+
+	private String ip;
+	private int port;
 	
-	String ip;
-	int port;
 	
-	
-	Socket tcpClient = null;
-	BufferedWriter out = null;
-	BufferedReader in = null;
+	private Socket tcpClient = null;
+	private BufferedWriter out = null;
+	private BufferedReader in = null;
 	
 	/**
 	 * Instantiate a new instance of the client
@@ -45,7 +45,7 @@ public class LDTPClient {
 			out = new BufferedWriter(new OutputStreamWriter(tcpClient.getOutputStream(), Charset.forName("ASCII")));
 			in = new BufferedReader(new InputStreamReader(tcpClient.getInputStream()));	
 		} catch (IOException e) {
-			System.out.println("Error connectin client to server on "+ip+" on port "+port);
+			System.out.println("Error connecting client to server on "+ip+" on port "+port);
 			e.printStackTrace();
 			close();
 		} 

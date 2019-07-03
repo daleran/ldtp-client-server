@@ -6,8 +6,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+
 namespace StudentRegistrationServer
 {
+    /// <summary>
+    /// A server that listens to a port for data using the LDTP
+    /// Upon recipe of a message, the ACK character is sent
+    /// </summary>
     class LDTServer
     {
         const char EOT = (char)4; //End of Message
@@ -46,7 +51,7 @@ namespace StudentRegistrationServer
                 listener = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 listener.Bind(endpoint);
                 listener.Listen(PendingConnectionQueueSize);
-                Console.WriteLine("LDTP Server on "+Ip.ToString()+" listening on port {0}.", Port);
+                Console.WriteLine("LDTP Server listending on {0} port {1}.", Ip.ToString(), Port);
                 RunEventLoop();
                 
             } catch (Exception e)
@@ -77,9 +82,18 @@ namespace StudentRegistrationServer
                     //Accept the incoming request
                     handler = listener.Accept();
 
+                    //String for the completed request to be passed to the callback
+                    string completedRequest = "";
+
                     //Handle the request and send back the ACK character
-                    HandleRequest(handler, buffer, request);
-                    SendAcknowledgement(handler);
+                    if(HandleRequest(handler, buffer, request, out completedRequest))
+                    {
+                        SendAcknowledgement(handler);
+
+                        //Invoke the any registered callbacks with the data
+                        RequestEvent?.Invoke(completedRequest);
+                    }
+                    
                 } catch(Exception e)
                 {
                     Console.WriteLine(e);
@@ -93,12 +107,12 @@ namespace StudentRegistrationServer
         }
 
         //Hand the new incoming connection
-        private bool HandleRequest(Socket handler, byte[] buffer, string request)
+        private bool HandleRequest(Socket handler, byte[] buffer, string request, out string completed)
         {
             //Set data string back to null
             request = null;
             bool success = false;
-
+      
             //Wait untill we recive the EOT character
             while (true)
             {
@@ -110,10 +124,7 @@ namespace StudentRegistrationServer
                 if (request.IndexOf(EOT) > -1)
                 {
                     //Trim the EOT
-                    request.Trim((char)4);
-
-                    //Invoke the any registered callbacks with the data
-                    RequestEvent?.Invoke(request);
+                    completed = request.Trim((char)4);
                     Console.WriteLine("Data recieved.");
 
                     //Set success to true and break out of the loop

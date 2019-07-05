@@ -17,6 +17,8 @@ namespace StudentRegistrationServer
     {
         const char EOT = (char)4; //End of Message
         const char ACK = (char)6; //Acknowledge character
+        const int DEFAULT_TIMEOUT = 10000;
+        const int DEFAULT_CONNECTION_QUEUE = 10;
 
         //TCP connection info
         public IPAddress Ip { get; }
@@ -27,6 +29,23 @@ namespace StudentRegistrationServer
 
         //Delegate used as callback to recieve data from the server
         public event Action<string> RequestEvent;
+
+        //Sets the listener and reciever timeouts of the server socket
+        private int timeout = DEFAULT_TIMEOUT;
+        public int Timeout
+        {
+            get { return timeout; }
+            set
+            {
+                timeout = value;
+
+                if (listener != null)
+                {
+                    listener.ReceiveTimeout = value;
+                    listener.SendTimeout = value;
+                }
+            }
+        }
 
         //Combination of an IP and Port the server will be listening from
         IPEndPoint endpoint = null;
@@ -39,7 +58,7 @@ namespace StudentRegistrationServer
         {
             Ip = IPAddress.Parse(ip);
             Port = port;
-            PendingConnectionQueueSize = 10;
+            PendingConnectionQueueSize = DEFAULT_CONNECTION_QUEUE; 
             endpoint = new IPEndPoint(Ip, Port);
         }
         
@@ -52,6 +71,7 @@ namespace StudentRegistrationServer
                 listener.Bind(endpoint);
                 listener.Listen(PendingConnectionQueueSize);
                 Console.WriteLine("LDTP Server listending on {0} port {1}.", Ip.ToString(), Port);
+                Timeout = timeout;
                 RunEventLoop();
                 
             } catch (Exception e)
@@ -81,6 +101,10 @@ namespace StudentRegistrationServer
                     Console.WriteLine("Waiting for a connection...");
                     //Accept the incoming request
                     handler = listener.Accept();
+
+                    //Set the timeout for the helper socket
+                    handler.ReceiveTimeout = Timeout;
+                    handler.SendTimeout = Timeout;
 
                     //String for the completed request to be passed to the callback
                     string completedRequest = "";

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.Charset;
 
 /**
@@ -17,14 +18,16 @@ import java.nio.charset.Charset;
 public class LDTPClient {
 	private final char ACK = (char)6;
 	private final char EOT = (char)4;
+	private final int DEFAULT_TIMEOUT = 10000;
 
 	private String ip;
 	private int port;
-	
-	
+
 	private Socket tcpClient = null;
 	private BufferedWriter out = null;
 	private BufferedReader in = null;
+
+
 	
 	/**
 	 * Instantiate a new instance of the client
@@ -43,7 +46,8 @@ public class LDTPClient {
 		try {
 			tcpClient = new Socket(ip, port);
 			out = new BufferedWriter(new OutputStreamWriter(tcpClient.getOutputStream(), Charset.forName("ASCII")));
-			in = new BufferedReader(new InputStreamReader(tcpClient.getInputStream()));	
+			in = new BufferedReader(new InputStreamReader(tcpClient.getInputStream()));
+			setTimeout(DEFAULT_TIMEOUT);
 		} catch (IOException e) {
 			System.out.println("Error connecting client to server on "+ip+" on port "+port);
 			e.printStackTrace();
@@ -51,6 +55,34 @@ public class LDTPClient {
 		} 
 		System.out.println("Connected the server on "+ip+" on port "+port);
 	}
+
+	/**
+	 * Get the timeout setting of the client
+	 *
+	 * @return The current timeout value in milliseconds
+	 */
+	public int getTimeout(){
+		try {
+			return tcpClient.getSoTimeout();
+		} catch (SocketException e) {
+			e.printStackTrace();
+			return DEFAULT_TIMEOUT;
+		}
+	}
+
+	/**
+	 * Set the timeout value on the client
+	 *
+	 * @param timeout The time in milliseconds before the client request fails with no response
+	 */
+	public void setTimeout(int timeout){
+		try {
+			tcpClient.setSoTimeout(timeout);
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+	}
+
 	
 	/**
 	 * Send an ASCII string message to the server

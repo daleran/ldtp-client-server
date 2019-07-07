@@ -27,3 +27,21 @@ To send data to the server start the client passing the server IP and port to th
 ```
 java -jar StudentRosterClient.jar [ip] [port] [studentID]
 ```
+
+### Client Settings
+Set the timeout of the client when waiting for a response with the following line of code after you create the server. Default is 10000ms or 10s.
+```
+client.setTimeout([time in ms]);
+```
+
+
+### Server Settings
+Set the timeout of server when waiting for the end of a tranmission with the following line of code after you create the server. Default is 10000ms or 10s.
+```
+server.Timeout = [time in ms];
+```
+
+Set the pending cvonnection queue after you create the server but before you start the server. Once the server has started you cannot change the queue. The connection queue denotes how many pending connections are allowed to queue before the server rejects any further connections. Default is 10.
+```
+server.PendingConnectionQueueSize = [queue size];
+```

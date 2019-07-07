@@ -5,7 +5,7 @@ A student project to build a simple TCP/IP Client and Server. A client written J
 The Lion Data Transfer Protocol is both a TCP protocol and a key-value serialization format.
 
 ### TCP Protocol
-The protocol consists of sending a ASCII encoded byte string followed by the EOT `u+004` to complete the tranmission. The reciever will send an ACK `u+006` to the the sender to confirm successful recipt of the message. Since the reciever does not know how large the message is going to be, a single message should not be longer than 1024 bytes. This is the default size of the server buffer.
+The protocol consists of sending a ASCII encoded byte string followed by the EOT `u+004` to complete the tranmission. The reciever will send an ACK `u+006` to the the sender to confirm successful recipt of the message. Since the reciever does not know how large the message is going to be, a single message should not be longer than 1024 bytes. This is the default size of the server buffer. Teh default port for the server is 7366 (PENN).
 
 ### Message Format
 The message serialization format has the first line key named "Type" followed by the type of object the rest of the key value pairs represent. Keys are seperated from values by the `\t` tab deliniator and key value pairs are seperated by the `\n` new line feed character.

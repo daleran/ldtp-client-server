@@ -41,7 +41,12 @@ Set the timeout of server when waiting for the end of a tranmission with the fol
 server.Timeout = [time in ms];
 ```
 
-Set the pending cvonnection queue after you create the server but before you start the server. Once the server has started you cannot change the queue. The connection queue denotes how many pending connections are allowed to queue before the server rejects any further connections. Default is 10.
+Set the pending connection queuesize after you create the server but before you start the server. Once the server has started you cannot change the queue. The connection queue denotes how many pending connections are allowed to queue before the server rejects any further connections. Default is 10.
 ```
 server.PendingConnectionQueueSize = [queue size];
+```
+
+Set the request buffer size after you create the server but before you start the server. Once the server has started you cannot change the buffer size. Default is 1024.
+```
+server.BufferSize = [buffer size in bytes];
 ```
